@@ -25,7 +25,6 @@
 #include "starkware/commitment_scheme/table_prover_mock.h"
 #include "starkware/commitment_scheme/table_verifier_impl.h"
 #include "starkware/commitment_scheme/table_verifier_mock.h"
-#include "starkware/crypt_tools/blake2s_160.h"
 #include "starkware/error_handling/test_utils.h"
 #include "starkware/fri/fri_parameters.h"
 #include "starkware/fri/fri_test_utils.h"
@@ -381,7 +380,7 @@ class FriEndToEndTest : public testing::Test {
               &p_channel);
 
           return std::make_unique<TableProverImpl<ExtensionFieldElement>>(
-              n_columns, UseMovedValue(std::move(packaging_commitment_scheme)), &p_channel);
+              n_columns, TakeOwnershipFrom(std::move(packaging_commitment_scheme)), &p_channel);
         };
 
     FriProver::FirstLayerCallback first_layer_queries_callback =
@@ -409,7 +408,7 @@ class FriEndToEndTest : public testing::Test {
           ExtensionFieldElement::SizeInBytes() * n_columns, n_rows, &v_channel);
 
       return std::make_unique<TableVerifierImpl<ExtensionFieldElement>>(
-          n_columns, UseMovedValue(std::move(packaging_commitment_scheme)), &v_channel);
+          n_columns, TakeOwnershipFrom(std::move(packaging_commitment_scheme)), &v_channel);
     };
 
     FriVerifier::FirstLayerCallback first_layer_queries_callback =
